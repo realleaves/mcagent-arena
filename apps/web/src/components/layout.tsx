@@ -6,7 +6,7 @@ import {
   Trophy,
   ArrowUpRight,
   ShieldCheck,
-  Terminal,
+  Sandwich,
 } from 'lucide-react';
 import type { Config } from '../lib/api';
 export function Layout({ config }: { config?: Config }) {
@@ -15,19 +15,19 @@ export function Layout({ config }: { config?: Config }) {
       <aside className="sidebar">
         <Link to="/" className="brand">
           <span className="logo">
-            <Terminal size={24} />
+            <Sandwich size={24} />
           </span>
           <span>
             McAgent<span className="brand-secondary">ARENA</span>
           </span>
         </Link>
-        <p className="sidebar-label">WORKSPACE / LOCAL</p>
+        <p className="sidebar-label">麦麦助手验证台 / 本机</p>
         <nav>
           {[
-            ['/', 'Dashboard', LayoutDashboard],
-            ['/arena', 'Battle Arena', Swords],
-            ['/traces', 'Trace Explorer', Activity],
-            ['/results', 'Results', Trophy],
+            ['/', '首页与使用指南', LayoutDashboard],
+            ['/arena', '助手对比', Swords],
+            ['/traces', '工具调用轨迹', Activity],
+            ['/results', '验收记录', Trophy],
           ].map(([path, label, Icon]) => {
             const I = Icon as typeof Swords;
             return (
@@ -42,15 +42,13 @@ export function Layout({ config }: { config?: Config }) {
           <div className="local-notice">
             <ShieldCheck size={18} />
             <span>
-              Read-only tools
+              麦当劳只读查询
               <br />
-              <small>Local execution · v1.0</small>
+              <small>营养 · 活动 · 时间信息</small>
             </span>
           </div>
           <a
-            href={
-              config?.githubUrl || 'https://github.com/search?q=McAgent+Arena&type=repositories'
-            }
+            href={config?.githubUrl || 'https://github.com/realleaves/mcagent-arena'}
             target="_blank"
             rel="noreferrer"
           >
@@ -63,9 +61,9 @@ export function Layout({ config }: { config?: Config }) {
         <div className="topbar">
           <span>
             <span className="online-dot" />
-            LOCAL ARENA
+            麦麦业务场景 / LOCAL
           </span>
-          <span className="muted">THE OPEN-SOURCE MCP AGENT BATTLE & BENCHMARK PLATFORM</span>
+          <span className="muted">查营养 · 找活动 · 验证可信回答</span>
           <span className="version">V1.0</span>
         </div>
         <div className="content">

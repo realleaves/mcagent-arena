@@ -9,7 +9,8 @@ import {
 import { delay } from '../../shared/src/errors.js';
 export const demoModels: ModelConfig[] = ['careful', 'hasty'].map((name) => ({
   id: `demo-${name}`,
-  label: name === 'careful' ? 'Demo / Synthetic · Careful' : 'Demo / Synthetic · Hasty',
+  label:
+    name === 'careful' ? 'Demo / Synthetic · 谨慎助手' : 'Demo / Synthetic · 急躁助手（错误示范）',
   model: `synthetic-${name}-v1`,
   baseUrl: '',
   apiKey: '',
@@ -17,7 +18,7 @@ export const demoModels: ModelConfig[] = ['careful', 'hasty'].map((name) => ({
   temperature: 0,
   maxOutputTokens: 2000,
   reasoningEffort: 'none',
-  promptVersion: 'demo-script-v1',
+  promptVersion: 'demo-script-v2',
   available: true,
 }));
 export class DemoAdapter implements AgentAdapter {
@@ -74,6 +75,7 @@ export class DemoAdapter implements AgentAdapter {
     if (data?.isError) {
       output.completed = false;
       output.uncertainty.reason = 'tool_failure';
+      output.answer = '合成演示：工具查询失败，暂时无法确认餐品信息，不编造结果。';
       return { content: JSON.stringify(output), calls: [], usage: 0 };
     }
     const foods = Array.isArray(data?.foods)
@@ -150,6 +152,30 @@ export class DemoAdapter implements AgentAdapter {
           evidence(c.id, 'status', c.status);
         }
       }
+    }
+    const prefix = this.hasty ? '合成错误示范：' : '合成演示：';
+    if (s.id === 'scenario-001' || s.id === 'scenario-005') {
+      output.answer =
+        prefix +
+        output.selectedItems.map((item) => `${item.name}每份 ${item.energyKcal} kcal`).join('；') +
+        '。这些是合成餐品，非麦当劳真实实时数据。';
+    } else if (s.id === 'scenario-002') {
+      output.answer =
+        prefix +
+        output.selectedItems
+          .map((item) => `${item.name}为 ${item.energyKcal} kcal / ${item.proteinG} g 蛋白质`)
+          .join('；') +
+        `。A−B 的能量差为 ${output.evidence.find((e) => e.field === 'energyDifferenceKcal')?.value} kcal，蛋白质差为 ${output.evidence.find((e) => e.field === 'proteinDifferenceG')?.value} g。`;
+    } else if (s.id === 'scenario-003') {
+      output.answer = this.hasty
+        ? '合成错误示范：钠含量是 123 mg（这是故意编造的错误数值）。'
+        : '合成演示：工具没有提供这款餐品的钠含量，无法给出准确数值。需要补充官方数据，而不是猜测。';
+    } else if (s.id === 'scenario-004') {
+      output.answer =
+        prefix +
+        `${s.targetDate} 的活动：` +
+        output.selectedItems.map((item) => item.name).join('、') +
+        '。这些是固定合成活动，非官方实时活动。';
     }
     return { content: JSON.stringify(output), calls: [], usage: 0 };
   }

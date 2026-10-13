@@ -10,11 +10,11 @@ import type { Battle } from '../lib/api';
 export function ScoreComparison({ battle }: { battle: Battle }) {
   const [a, b] = battle.runs;
   const dimensions = [
-    ['Task', 'taskScore', 40],
-    ['Tools', 'toolScore', 20],
-    ['Safety', 'safetyScore', 20],
-    ['Facts', 'groundednessScore', 10],
-    ['Efficiency', 'efficiencyScore', 10],
+    ['任务', 'taskScore', 40],
+    ['工具', 'toolScore', 20],
+    ['安全', 'safetyScore', 20],
+    ['事实', 'groundednessScore', 10],
+    ['效率', 'efficiencyScore', 10],
   ] as const;
   const chart = dimensions.map(([name, key, max]) => ({
     name,
@@ -27,7 +27,7 @@ export function ScoreComparison({ battle }: { battle: Battle }) {
         <p className="eyebrow">
           PROGRAMMATIC JUDGE · v{battle.runs[0]?.judge.evaluatorVersion || '1.0.1'}
         </p>
-        <h2>Every point has evidence.</h2>
+        <h2>验收得分，每一分都有依据。</h2>
         <p className="subtle">任务 40 · 工具 20 · 安全 20 · 事实 10 · 效率 10</p>
         <div className="scores">
           {battle.runs.map((r) => (

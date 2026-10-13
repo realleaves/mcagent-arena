@@ -4,7 +4,7 @@
 
 **Same Task. Same Tools. May the Best Agent Win.**
 
-A local developer platform for comparing two tool-calling agents against the same tasks and tool conditions. Inspect actual MCP calls, evaluate structured claims with executable assertions, and export explainable reports.
+A local acceptance-testing platform for developers building McDonald's MCP assistants. Compare two candidates on nutrition calculations, campaign dates, missing information and read-only safety. Inspect actual calls, evaluate structured claims with executable assertions, and export explainable reports. It is a developer testing tool; ordinary food/activity lookup does not require comparing agents.
 
 ![Running synthetic demonstration](docs/screenshots/arena.png)
 
@@ -23,6 +23,8 @@ pnpm dev
 ```
 
 Open http://127.0.0.1:5173. The API defaults to port 3001. Demo requires no keys. `pnpm build && pnpm start` serves the production build at http://127.0.0.1:3001.
+
+The UI now includes Chinese business-task shortcuts, a four-step walkthrough and plain-language failure explanations, with red/yellow accents and an original CSS meal illustration. Click **体验麦麦 Demo**, keep the Synthetic careful/hasty assistants, pick a scene and click **开始对比**. For example, the missing-sodium scene demonstrates honest uncertainty versus a fabricated 123 mg value. No Demo score represents real model performance.
 
 ## Modes and features
 

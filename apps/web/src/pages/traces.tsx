@@ -21,13 +21,13 @@ export function Traces() {
     <>
       <PageHeader
         eyebrow="OBSERVABILITY / NO HIDDEN CHAIN OF THOUGHT"
-        title="Trace Explorer"
-        description="可观察事件、脱敏参数、工具返回和评分依据。"
+        title="工具调用轨迹"
+        description="核对助手查了什么、工具实际返回什么，以及评分为什么通过或失败。"
         action={
           battle && (
             <a className="button ghost" href={`/api/battles/${battle.id}/report`}>
               <Download size={16} />
-              Export report
+              下载验收报告
             </a>
           )
         }
@@ -35,7 +35,7 @@ export function Traces() {
       <section className="panel trace-selector">
         <Activity size={20} />
         <select value={id || ''} onChange={(e) => navigate(`/traces/${e.target.value}`)}>
-          <option value="">选择一场对战</option>
+          <option value="">选择一次助手对比</option>
           {battles.map((b) => (
             <option key={b.id} value={b.id}>
               {b.scenarioId} · {b.mode} · {date(b.startedAt)}

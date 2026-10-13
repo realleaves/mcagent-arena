@@ -25,6 +25,8 @@ mcagent-arena/
     web/
       src/
         components/
+          battle-takeaways.tsx
+          meal-illustration.tsx
           layout.tsx
           score.tsx
           trace.tsx
@@ -33,6 +35,7 @@ mcagent-arena/
           use-battle.ts
         lib/
           api.ts
+          scenario-guide.ts
         pages/
           arena.tsx
           dashboard.tsx
@@ -62,10 +65,13 @@ mcagent-arena/
       arena.png
       dashboard.png
       mobile-arena.png
+      mobile-dashboard.png
       results.png
       traces.png
     api.md
     architecture.md
+    contest-submission.md
+    verification-summary.json
     demo.md
     development-status.md
     scoring.md

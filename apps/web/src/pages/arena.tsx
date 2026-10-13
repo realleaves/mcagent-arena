@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams, Link } from 'react-router-dom';
 import { Swords, ArrowUpRight, Download, Terminal, Clock3, CheckCircle2 } from 'lucide-react';
 import { api, type Scenario, type Config, type Mode, type Battle, pretty } from '../lib/api';
 import { useBattle } from '../hooks/use-battle';
 import { PageHeader, ModeBadge, ErrorBox, Status, Empty } from '../components/ui';
 import { TraceTimeline } from '../components/trace';
 import { ScoreComparison } from '../components/score';
+import { BattleTakeaways } from '../components/battle-takeaways';
+import { scenarioGuides } from '../lib/scenario-guide';
 export function Arena({ config }: { config?: Config }) {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { battle, events, error: traceError } = useBattle(id);
   const [scenarios, setScenarios] = useState<Scenario[]>([]),
@@ -31,6 +34,10 @@ export function Arena({ config }: { config?: Config }) {
       setB(battle.agentB);
     }
   }, [battle?.id]);
+  useEffect(() => {
+    const requested = searchParams.get('scenario');
+    if (!id && requested && scenarios.some((s) => s.id === requested)) setScenarioId(requested);
+  }, [id, searchParams, scenarios]);
   function chooseMode(next: Mode) {
     setMode(next);
     const m = next === 'demo' ? config?.demoModels || [] : config?.models || [];
@@ -55,18 +62,19 @@ export function Arena({ config }: { config?: Config }) {
     }
   }
   const current = scenarios.find((s) => s.id === scenarioId);
+  const guide = scenarioGuides[scenarioId];
   const running = battle?.status === 'running';
   return (
     <>
       <PageHeader
-        eyebrow="SAME TASK / INDEPENDENT CONTEXTS"
-        title="Battle Arena"
-        description="观察实际工具调用，让证据决定结果。"
+        eyebrow="McAgent Arena / 同一任务 · 独立执行"
+        title="麦麦助手对比"
+        description="检查营养、活动和安全查询是否有依据。先用 Demo 看懂流程，再用真实模型验收。"
         action={battle && <ModeBadge mode={battle.mode} />}
       />
       <section className="panel battle-controls">
         <label>
-          AGENT A
+          助手 A
           <select value={agentA} onChange={(e) => setA(e.target.value)} disabled={running}>
             {models.map((m) => (
               <option key={m.id} value={m.id}>
@@ -77,7 +85,7 @@ export function Arena({ config }: { config?: Config }) {
         </label>
         <span className="control-vs">VS</span>
         <label>
-          AGENT B
+          助手 B
           <select value={agentB} onChange={(e) => setB(e.target.value)} disabled={running}>
             {models.map((m) => (
               <option key={m.id} value={m.id}>
@@ -87,7 +95,7 @@ export function Arena({ config }: { config?: Config }) {
           </select>
         </label>
         <label>
-          SCENARIO
+          任务场景
           <select
             value={scenarioId}
             onChange={(e) => setScenarioId(e.target.value)}
@@ -97,21 +105,21 @@ export function Arena({ config }: { config?: Config }) {
               .filter((s) => s.mode.includes(mode))
               .map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.id.slice(-3)} · {s.title}
+                  {s.id.slice(-3)} · {scenarioGuides[s.id]?.title || s.title}
                 </option>
               ))}
           </select>
         </label>
         <label>
-          MODE
+          运行方式
           <select
             value={mode}
             onChange={(e) => chooseMode(e.target.value as Mode)}
             disabled={running}
           >
-            <option value="demo">Demo / Synthetic</option>
-            <option value="replay">Fixture Replay</option>
-            <option value="live">Live MCP</option>
+            <option value="demo">Demo / Synthetic · 免密钥演示</option>
+            <option value="replay">Fixture Replay · 真实模型 + 固定数据</option>
+            <option value="live">Live MCP · 真实模型 + 官方数据</option>
           </select>
         </label>
         <button
@@ -122,7 +130,7 @@ export function Arena({ config }: { config?: Config }) {
           onClick={() => void start()}
         >
           <Swords size={17} />
-          {starting ? 'Starting…' : running ? 'Battle running…' : 'Start Battle'}
+          {starting ? '正在启动…' : running ? '正在执行…' : '开始对比'}
         </button>
       </section>
       {mode !== 'demo' &&
@@ -132,15 +140,36 @@ export function Arena({ config }: { config?: Config }) {
           </ErrorBox>
         ))}
       {(error || traceError) && <ErrorBox>{error || traceError}</ErrorBox>}
+      <div className="panel scenario-brief">
+        <div>
+          <p className="eyebrow">为什么要测这道题？</p>
+          <h2>{guide?.title || current?.title}</h2>
+          <p>{guide?.purpose || current?.description}</p>
+        </div>
+        <details open={!battle}>
+          <summary>{mode === 'demo' ? 'Demo 操作与观察提示' : '操作提示'}</summary>
+          <p>
+            {mode === 'demo'
+              ? guide?.lesson
+              : '选择两个可用的模型，点击“开始对比”。先核对最终答案，再看失败断言及其对应的工具返回。真实模型请求可能消耗 API 额度；Replay 数据是固定合成数据，Live 数据来自官方 MCP。'}
+          </p>
+          {mode === 'demo' && (
+            <p className="subtle">
+              默认 A 是谨慎助手，B
+              是故意出错的急躁助手。这里演示的是两种行为，分数不代表真实模型水平。
+            </p>
+          )}
+        </details>
+      </div>
       <div className="task-strip">
-        <span className="eyebrow">CHALLENGE BRIEF</span>
+        <span className="eyebrow">本次交给助手的任务</span>
         <p>{current?.task}</p>
         <div className="task-limits">
           <span>v{current?.version}</span>
-          <span>≤ 6 steps</span>
-          <span>≤ 6 tool calls</span>
-          <span>60s limit</span>
-          <span>Default-deny gateway</span>
+          <span>最多 6 轮</span>
+          <span>最多 6 次工具调用</span>
+          <span>限时 60 秒</span>
+          <span>真实工具只读</span>
         </div>
       </div>
       <div className="arena-grid">
@@ -148,16 +177,26 @@ export function Arena({ config }: { config?: Config }) {
           const run = battle?.runs.find((r) => r.agentSlot === slot);
           const local = events.filter((e) => e.agentSlot === slot);
           const completion = [...local].reverse().find((e) => e.type === 'agent_completed');
-          const name =
+          const modelId =
             run?.modelId ||
             models.find((m) => m.id === (slot === 'A' ? agentA : agentB))?.model ||
-            'Model unavailable';
+            '模型不可用';
+          const name =
+            mode === 'demo'
+              ? modelId.includes('careful')
+                ? '谨慎助手 · 合成演示'
+                : modelId.includes('hasty')
+                  ? '急躁助手 · 错误演示'
+                  : modelId
+              : modelId;
           return (
             <section className={`panel agent-panel ${slot.toLowerCase()}`} key={slot}>
               <div className="agent-heading">
                 <div className="agent-avatar">{slot}</div>
                 <div>
-                  <p className="eyebrow">AGENT {slot}</p>
+                  <p className="eyebrow">
+                    助手 {slot} / AGENT {slot}
+                  </p>
                   <h2>{name}</h2>
                 </div>
                 <Status
@@ -170,11 +209,11 @@ export function Arena({ config }: { config?: Config }) {
               <div className="agent-metrics">
                 <span>
                   <Terminal size={14} />
-                  {local.filter((e) => e.type === 'tool_result').length} calls
+                  {local.filter((e) => e.type === 'tool_result').length} 次调用
                 </span>
                 <span>
                   <Clock3 size={14} />
-                  {run ? `${(run.totalDurationMs / 1000).toFixed(1)}s` : 'Awaiting result'}
+                  {run ? `${(run.totalDurationMs / 1000).toFixed(1)}s` : '等待结果'}
                 </span>
                 <span>
                   <CheckCircle2 size={14} />
@@ -185,14 +224,14 @@ export function Arena({ config }: { config?: Config }) {
                 {local.length ? (
                   <TraceTimeline events={local} />
                 ) : (
-                  <Empty title="Ready for the challenge">
-                    独立上下文 · 相同任务 · 相同工具范围
+                  <Empty title="点击“开始对比”后显示执行过程">
+                    营养和活动答案都要能追溯到工具证据。
                   </Empty>
                 )}
               </div>
               {run && (
                 <div className="agent-answer">
-                  <p className="eyebrow">FINAL ANSWER / OBSERVABLE OUTPUT</p>
+                  <p className="eyebrow">助手回答 / 可观察输出</p>
                   {run.error && (
                     <ErrorBox>
                       {run.errorCode}：{run.error}
@@ -222,15 +261,16 @@ export function Arena({ config }: { config?: Config }) {
       </div>
       {battle && battle.runs.length > 0 && (
         <>
+          <BattleTakeaways battle={battle} />
           <ScoreComparison battle={battle} />
           <div className="report-actions">
             <Link className="button ghost" to={`/traces/${battle.id}`}>
               <ArrowUpRight size={16} />
-              Explore full trace
+              查看完整工具轨迹
             </Link>
             <a className="button ghost" href={`/api/battles/${battle.id}/report`}>
               <Download size={16} />
-              Download JSON report
+              下载 JSON 验收报告
             </a>
           </div>
         </>

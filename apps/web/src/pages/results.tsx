@@ -35,7 +35,7 @@ export function Results() {
     <>
       <PageHeader
         eyebrow="RESULTS / REPRODUCIBLE EVALUATION CONDITIONS"
-        title="Results & leaderboard"
+        title="验收记录与模型排名"
         description="每一场对战都可追溯；标准排名仅比较相同 Fixture、版本、提示词和参数条件。"
       />
       {error && <ErrorBox>{error}</ErrorBox>}
@@ -71,13 +71,13 @@ export function Results() {
             </div>
           ))
         ) : (
-          <Empty title="Awaiting verified Replay results">
+          <Empty title="等待真实模型 Replay 验收结果">
             Demo 演示和 Live 实时结果会保存在历史中，但不会进入标准排行榜。
           </Empty>
         )}
       </section>
       <div className="section-heading">
-        <h2>Battle history</h2>
+        <h2>助手验收历史</h2>
         <select
           className="filter-select"
           value={filter}
@@ -151,7 +151,7 @@ export function Results() {
             </tbody>
           </table>
         ) : (
-          <Empty title="No battles yet">从免密钥 Demo 开始，结果会自动保存到本机 SQLite。</Empty>
+          <Empty title="还没有验收记录">从免密钥 Demo 开始，结果会自动保存到本机 SQLite。</Empty>
         )}
       </div>
     </>
