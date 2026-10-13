@@ -1,0 +1,60 @@
+{
+  "name": "mcagent-arena",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "arena:test": "pnpm test",
+    "build": "pnpm typecheck && vite build --config apps/web/vite.config.ts && tsc -p apps/api/tsconfig.build.json",
+    "start": "node --env-file-if-exists=.env dist/apps/api/src/server.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "arena:verify-mcp": "tsx scripts/verify-mcp.ts",
+    "arena:demo": "tsx scripts/smoke-test.ts",
+    "arena:run": "tsx scripts/run.ts",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
+    "arena:verify-provider": "tsx scripts/verify-provider.ts",
+    "test:browser": "node scripts/browser-smoke.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "globals": "^16.0.0",
+    "playwright": "1.62.1",
+    "prettier": "^3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.0"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.0.0",
+    "@modelcontextprotocol/client": "2.0.0",
+    "@radix-ui/react-tabs": "^1.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "ajv": "^8.0.0",
+    "ajv-formats": "^3.0.0",
+    "fastify": "^5.0.0",
+    "lucide-react": "^0.500.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0",
+    "recharts": "^3.0.0",
+    "tailwindcss": "^4.0.0",
+    "zod": "^4.0.0"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-10-13",
+  "endpoint": "https://mcp.mcd.cn",
+  "sdk": "@modelcontextprotocol/client@2.0.0",
+  "note": "Sanitized execution metadata only; no model benchmark success is claimed. Raw payloads and credentials stay local.",
+  "tests": {
+    "vitestPassed": 53,
+    "typecheck": "passed",
+    "build": "passed",
+    "browserDemo": "passed"
+  },
+  "toolCalls": [
+    {
+      "toolName": "list-nutrition-foods",
+      "status": "success",
+      "durationMs": 546,
+      "timestamp": "2026-10-13T10:32:28.937Z",
+      "source": "live",
+      "outputSha256": "86b1b10f280500e4e3aed29dc3bf54d6d212a671f1620659d4d949e876c11a9f"
+    },
+    {
+      "toolName": "campaign-calendar",
+      "status": "success",
+      "durationMs": 569,
+      "timestamp": "2026-10-13T11:00:50.227Z",
+      "source": "live",
+      "outputSha256": "1e11b7baa396e7c5d1c171d28aa18087a56f09e4b3ea8211d945e40ee3035aa6"
+    }
+  ]
+}

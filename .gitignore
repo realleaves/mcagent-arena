@@ -1,0 +1,17 @@
+node_modules/
+.tools/
+.env
+.env.*
+!.env.example
+dist/
+apps/web/dist/
+data/
+*.sqlite*
+coverage/
+playwright-report/
+*.log
+
+# Local credential/tooling paths are never project source.
+/.aws
+/.codex
+/.agents

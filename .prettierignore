@@ -1,0 +1,6 @@
+node_modules
+dist
+.tools
+pnpm-lock.yaml
+CONTEST_DECLARATION.md
+docs/official

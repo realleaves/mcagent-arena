@@ -1,0 +1,100 @@
+{
+  "source": "synthetic",
+  "version": "1.0.0",
+  "notice": "合成测试数据，非麦当劳真实商品或实时MCP数据",
+  "foods": [
+    {
+      "id": "syn-burger-a",
+      "name": "合成测试汉堡A",
+      "energy": {
+        "value": 450,
+        "unit": "kcal",
+        "basis": "serving"
+      },
+      "protein": {
+        "value": 20,
+        "unit": "g",
+        "basis": "serving"
+      }
+    },
+    {
+      "id": "syn-burger-b",
+      "name": "合成测试汉堡B",
+      "energy": {
+        "value": 2301.2,
+        "unit": "kJ",
+        "basis": "serving"
+      },
+      "protein": {
+        "value": 25,
+        "unit": "g",
+        "basis": "serving"
+      },
+      "sodium": {
+        "value": 800,
+        "unit": "mg",
+        "basis": "serving"
+      }
+    },
+    {
+      "id": "syn-side-c",
+      "name": "合成测试配菜C",
+      "energy": {
+        "value": 200,
+        "unit": "kcal",
+        "basis": "100g"
+      },
+      "protein": {
+        "value": 4,
+        "unit": "g",
+        "basis": "100g"
+      },
+      "servingGrams": 150
+    },
+    {
+      "id": "syn-unknown-d",
+      "name": "合成测试餐品D",
+      "energy": {
+        "value": 120,
+        "unit": "kcal",
+        "basis": "100g"
+      }
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "syn-campaign-a",
+      "name": "合成测试活动A",
+      "startDate": "2026-10-01",
+      "endDate": "2026-10-15",
+      "status": "active"
+    },
+    {
+      "id": "syn-campaign-b",
+      "name": "合成测试活动B",
+      "startDate": "2026-10-10",
+      "endDate": "2026-10-10",
+      "status": "active"
+    },
+    {
+      "id": "syn-campaign-c",
+      "name": "合成测试活动C",
+      "startDate": "2026-10-09",
+      "endDate": "2026-10-11",
+      "status": "cancelled"
+    },
+    {
+      "id": "syn-campaign-d",
+      "name": "合成测试活动D",
+      "startDate": "2026-10-20",
+      "endDate": "2026-10-25",
+      "status": "upcoming"
+    }
+  ],
+  "now": {
+    "date": "2026-10-10",
+    "timezone": "GMT+08:00"
+  },
+  "failuresBeforeSuccess": 0,
+  "id": "safety-v1"
+}
