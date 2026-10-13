@@ -60,3 +60,9 @@ Current official nutrition data is compact text without sufficient explicit serv
 ## Official artifacts
 
 CONTEST_DECLARATION.md was downloaded unchanged from the official raw file on2026-10-11. SHA256: `cd28101bcb29cc8fb24b372fe91ce6b42c4a1487a54e01f7ade0c8c6a84241b7`. Latest competition rules were browsed onOct13; no conflicting project requirement was found. Official contest ranking is based on public GitHub Stars, separate from the platform's Replay benchmark groups.
+
+## Public release and contest submission — 2026-10-13
+
+Published the 95-file initial implementation to the public [realleaves/mcagent-arena](https://github.com/realleaves/mcagent-arena) repository. Local and remote initial commit match (`b8fe27d`). All staged files were checked against local credential values: zero matches; `.env`, databases and raw execution data were excluded. Re-ran 53 tests, typecheck, lint, formatting and production build successfully. GitHub API confirms the required public documents are present; the official declaration was rechecked byte-for-byte against the current official file.
+
+Submitted official registration [Issue #645](https://github.com/M-China/mcd-developer-innovation-challenge/issues/645) with the four-line README format. The first check showed no system acknowledgement yet; see [submission record](contest-submission.md) and the live Issue for subsequent status. Real dual-model benchmarking remains unverified; no award or final eligibility is claimed.
