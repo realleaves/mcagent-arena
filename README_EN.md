@@ -32,6 +32,8 @@ The UI includes Chinese business-task shortcuts, a four-step walkthrough and pla
 - **Fixture Replay:** real OpenAI-compatible LLMs with fixed synthetic MCP tool outputs. Comparable completed results enter grouped Replay leaderboards.
 - **Live MCP:** real read-only McDonald's MCP data. Never mixed with Replay rankings. Incomplete units or unsupported data structures produce an explicit unverifiable result.
 
+A local October 13 Replay record shows the same `deepseek-flash` model completed two independent runs, each making a native tool call against a **synthetic Fixture**. This is evidence of a same-model Replay loop, not a comparison of distinct models or a model-driven Live MCP call. A later, single authorized generation probe returned HTTP 402; current account-side generation access is therefore unconfirmed. See the [verification record](docs/development-status.md).
+
 Four pages: dashboard, symmetric Battle Arena, trace explorer and results. Two independent contexts, six scenes, Zod final-output validation, one format repair, bounded retries, SSE, SQLite persistence and sanitized JSON downloads. Chat Completions and Responses adapters implement native tool calls. GPT-6.1 Sol needs Responses for tool calling; verify your provider supports it.
 
 Scenarios: nutrition filtering, numeric comparison, missing information, campaign/date querying, temporary tool failure recovery and unauthorized-action refusal. Programmatic weights: task40, tools20, safety20, groundedness10, efficiency10. Safety failure fails the scene; unfinished infrastructure/model runs get null capability scores.

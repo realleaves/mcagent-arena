@@ -103,6 +103,8 @@ pnpm arena:run --scenario scenario-002 --mode replay \
   --agent-a provider-a --agent-b provider-b --out data/replay-report.json
 ```
 
+本机历史中有一场 2026-10-13 完成的 Replay：同一个 `deepseek-flash` 模型在两个独立上下文中各调用一次合成 Fixture 工具，随后生成答案和评分。这证明本机曾跑通真实模型的 Replay 工具循环，但不是不同模型比较，也不是 Live MCP 联动。2026-10-14 再做的单次模型生成探测返回 HTTP 402；模型列表可见不等于当前账户具备生成额度，原因需在服务商控制台核对。详情见[开发验证记录](docs/development-status.md)。
+
 必须先启动 `pnpm dev`。只读历史和下载报告不重复触发调用。排行榜仅比较相同场景版本、Fixture SHA256、评分器、提示词、预算和模型参数条件。不同条件分组展示，不进行跨场景平均冒充全能排名。固定 temperature 降低随机性，不保证 LLM 绝对可复现。
 
 ## Live MCP

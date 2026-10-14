@@ -137,6 +137,11 @@ export class OpenAICompatibleAdapter implements AgentAdapter {
       }
       if (!r.ok) {
         await r.body?.cancel();
+        if (r.status === 402)
+          throw new ArenaError(
+            'PROVIDER_BILLING',
+            '模型服务返回 HTTP 402，生成请求被拒绝；请在服务商控制台核对额度、余额或计费权限。',
+          );
         throw new ArenaError(
           r.status === 401
             ? 'PROVIDER_AUTH'

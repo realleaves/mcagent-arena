@@ -124,6 +124,24 @@ test('Chat Completions tools protocol parses native calls and retries 429', asyn
   expect(attempts).toBe(3);
   expect(r.calls[0]?.name).toBe('now-time-info');
 });
+test('HTTP 402 is reported as a billing infrastructure error without retrying', async () => {
+  let attempts = 0;
+  const s = loadScenario('scenario-001');
+  const adapter = new OpenAICompatibleAdapter(
+    { ...demoModels[0]!, baseUrl: 'http://localhost/v1' },
+    async () => {
+      attempts++;
+      return new Response('', { status: 402 });
+    },
+  );
+  const run = await runAgent(adapter, new FixtureProvider(s.fixtureId), s, 'replay');
+  expect(attempts).toBe(1);
+  expect(run.status).toBe('infrastructure_failed');
+  expect(run.errorCode).toBe('PROVIDER_BILLING');
+  expect(
+    judge(s, run.finalAnswer, run.records, run.totalDurationMs, 'replay', run.status).totalScore,
+  ).toBeNull();
+});
 test('Responses continuation submits tool result with call_id and no hidden trace', async () => {
   const bodies: Record<string, unknown>[] = [];
   const adapter = new OpenAICompatibleAdapter(

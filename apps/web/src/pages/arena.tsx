@@ -162,7 +162,7 @@ export function Arena({ config }: { config?: Config }) {
           <p>
             {mode === 'demo'
               ? guide?.lesson
-              : '选择两个可用的模型，点击“开始对比”。先核对最终答案，再看失败断言及其对应的工具返回。真实模型请求可能消耗 API 额度；Replay 数据是固定合成数据，Live 数据来自官方 MCP。'}
+              : '选择服务端模型列表中存在的配置，点击“开始对比”。模型列表只证明 ID 可见，不证明账户有生成额度或支持原生工具调用；真实请求可能计费。先核对最终答案，再看失败断言及工具返回。Replay 数据为固定合成数据，Live 数据来自官方 MCP。'}
           </p>
           {mode === 'demo' && (
             <p className="subtle">
