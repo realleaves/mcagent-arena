@@ -31,7 +31,7 @@ Demo 的餐品、活动、行为和得分都明确标为合成数据。它用于
 
 ## 接入真实模型：Fixture Replay
 
-在本机 `.env` 配置两侧 `AGENT_*_API_BASE_URL`、`AGENT_*_API_KEY` 和服务真实可用的准确 `AGENT_*_MODEL`。根据服务支持的协议选择 Chat 或 Responses，重启 `pnpm dev`。可以用 `pnpm arena:verify-provider` 检查模型列表；Key 有效不等于配置的模型或工具协议可用。
+在本机 `.env` 配置两侧 `AGENT_*_API_BASE_URL`、`AGENT_*_API_KEY` 和服务真实可用的准确 `AGENT_*_MODEL`。根据服务支持的协议选择 Chat 或 Responses，重启 `pnpm dev`。可以用 `pnpm arena:verify-provider --provider provider-a` 只检查 A 的模型列表；加 `--probe` 才会发起一次可能计费的原生工具调用探测，最多 256 输出 Token、15 秒，工具是本地合成定义，不访问真实 MCP。Key 有效不等于配置的模型或工具协议可用。
 
 在页面选择 **Fixture Replay** 和两个可用模型，再选场景、点击 **开始对比**。模型会实际请求工具，但工具返回是固定合成 Fixture，便于保持同样输入条件。模型请求可能消耗额度。当前开发环境的真实双模型对战尚未验证成功，模型 ID / 服务权限仍需修正；页面会解释不可用原因，不伪造模型成绩。
 

@@ -6,8 +6,16 @@ import {
 } from '../packages/runner/src/provider-adapter.js';
 import { redact } from '../packages/shared/src/redact.js';
 if (existsSync('.env')) process.loadEnvFile('.env');
+const providerIndex = process.argv.indexOf('--provider');
+const providerId = providerIndex >= 0 ? process.argv[providerIndex + 1] : undefined;
+const configured = configuredModels();
+if (providerIndex >= 0 && (!providerId || providerId.startsWith('--')))
+  throw new Error('--provider 需要指定已配置的 Provider ID');
+const selected = providerId ? configured.filter((config) => config.id === providerId) : configured;
+if (!selected.length)
+  throw new Error(providerId ? `未找到已配置的 Provider：${providerId}` : '没有配置模型 Provider');
 const evidence = [];
-for (const config of configuredModels()) {
+for (const config of selected) {
   const meta = await modelAvailability(config);
   const result: {
     id: string;
@@ -26,7 +34,8 @@ for (const config of configuredModels()) {
   };
   if (process.argv.includes('--probe')) {
     try {
-      const adapter = new OpenAICompatibleAdapter({ ...config, maxOutputTokens: 1000 });
+      if (!meta.available) throw new Error('服务端模型列表中没有这个模型，未发起付费探测');
+      const adapter = new OpenAICompatibleAdapter({ ...config, maxOutputTokens: 256 });
       const turn = await adapter.complete(
         [
           {
@@ -44,7 +53,7 @@ for (const config of configuredModels()) {
           },
         ],
         AbortSignal.timeout(15000),
-        1000,
+        256,
       );
       result.nativeToolCalling = turn.calls.some((c) => c.name === 'now-time-info');
       result.error = result.nativeToolCalling ? undefined : '模型未返回原生工具调用';

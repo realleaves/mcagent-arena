@@ -96,7 +96,7 @@ GPT-6.1 Sol 工具调用需要 Responses API；仅配置 Chat Completions 中转
 
 ## Fixture Replay
 
-配置两侧 Provider、Key、准确模型 ID，重启服务。在 Arena 选择 Fixture Replay 与可用模型；真实 LLM 接收原生工具 schema，通过 Gateway 执行固定合成数据回放。
+配置两侧 Provider、Key、准确模型 ID，重启服务。在 Arena 选择 Fixture Replay 与可用模型；真实 LLM 接收原生工具 schema，通过 Gateway 执行固定合成数据回放。只查询某个模型是否列在服务端，可运行 `pnpm arena:verify-provider --provider provider-a`；加 `--probe` 才会发起可能计费的一次原生工具调用探测（最多 256 输出 Token、15 秒，不调用真实 MCP）。
 
 ```bash
 pnpm arena:run --scenario scenario-002 --mode replay \
