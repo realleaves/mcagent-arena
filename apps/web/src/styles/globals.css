@@ -328,6 +328,11 @@ footer {
   flex-wrap: wrap;
   gap: 12px;
 }
+.hero-copy .hero-demo-note {
+  margin: 13px 0 0;
+  color: #cfb994;
+  font-size: 11px;
+}
 .button {
   display: inline-flex;
   align-items: center;
@@ -1426,6 +1431,29 @@ td a {
   color: #efa65b;
   flex-shrink: 0;
   margin-top: 4px;
+}
+.takeaway li b {
+  font-weight: 500;
+}
+.takeaway li small {
+  display: block;
+  margin-top: 3px;
+  color: #8294ab;
+  line-height: 1.6;
+}
+.model-availability {
+  padding: 14px 18px;
+  margin-top: 14px;
+  color: #c4d0df;
+  font-size: 12px;
+}
+.model-availability summary {
+  cursor: pointer;
+}
+.model-availability ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #9baec4;
 }
 .takeaway p {
   margin-top: 12px;

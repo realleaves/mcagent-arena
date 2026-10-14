@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   FlaskConical,
@@ -17,11 +17,13 @@ import { ModeBadge, Empty, ErrorBox, Status } from '../components/ui';
 import { MealIllustration } from '../components/meal-illustration';
 import { scenarioGuides } from '../lib/scenario-guide';
 export function Dashboard({ config }: { config?: Config }) {
+  const navigate = useNavigate();
   const [battles, setBattles] = useState<Battle[]>([]),
     [scenarios, setScenarios] = useState<Scenario[]>([]),
     [mcp, setMcp] = useState<{ connected: boolean; error?: string }>({ connected: false }),
     [error, setError] = useState(''),
-    [probing, setProbing] = useState(false);
+    [probing, setProbing] = useState(false),
+    [startingDemo, setStartingDemo] = useState(false);
   useEffect(() => {
     Promise.all([
       api<Battle[]>('/battles'),
@@ -46,6 +48,27 @@ export function Dashboard({ config }: { config?: Config }) {
       setProbing(false);
     }
   }
+  async function startFeaturedDemo() {
+    if (startingDemo) return;
+    setStartingDemo(true);
+    setError('');
+    try {
+      const battle = await api<Battle>('/battles', {
+        method: 'POST',
+        body: JSON.stringify({
+          scenarioId: 'scenario-003',
+          agentA: 'demo-careful',
+          agentB: 'demo-hasty',
+          mode: 'demo',
+        }),
+      });
+      navigate(`/arena/${battle.id}`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setStartingDemo(false);
+    }
+  }
   return (
     <>
       <section className="hero">
@@ -66,15 +89,22 @@ export function Dashboard({ config }: { config?: Config }) {
             用官方 MCP 工具和固定测试题，检查助手的每一步与每个结论。
           </p>
           <div className="hero-actions">
-            <Link className="button primary" to="/arena">
+            <button
+              className="button primary"
+              onClick={() => void startFeaturedDemo()}
+              disabled={startingDemo}
+            >
               <Sandwich size={18} />
-              体验麦麦 Demo
+              {startingDemo ? '正在启动演示…' : '一键体验：AI 会编造钠含量吗？'}
               <ArrowRight size={17} />
+            </button>
+            <Link className="button ghost" to="/arena">
+              自己选任务
             </Link>
-            <a className="button ghost" href="#how-to">
-              这个怎么用？
-            </a>
           </div>
+          <p className="hero-demo-note">
+            无需密钥 · 固定合成数据与预设助手行为 · 不代表真实模型成绩
+          </p>
         </div>
         <MealIllustration />
       </section>
@@ -155,14 +185,14 @@ export function Dashboard({ config }: { config?: Config }) {
             <b>01</b>
             <div>
               <strong>选一道麦麦任务</strong>
-              <p>从下面的营养、活动或安全场景进入。</p>
+              <p>点首页钠含量案例，或从下方选其他场景。</p>
             </div>
           </li>
           <li>
             <b>02</b>
             <div>
-              <strong>点击“开始对比”</strong>
-              <p>Demo 预设谨慎与急躁两种行为，不收费。</p>
+              <strong>运行合成演示</strong>
+              <p>首页案例一键启动；其他任务在 Arena 点击“开始对比”。</p>
             </div>
           </li>
           <li>

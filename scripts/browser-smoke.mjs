@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 import { mkdirSync, existsSync } from 'node:fs';
-const screenshots = process.env.ARENA_SCREENSHOT_DIR || 'docs/screenshots';
+const screenshots = process.env.ARENA_SCREENSHOT_DIR || 'data/browser-screenshots';
 const base = process.env.ARENA_WEB_URL || 'http://127.0.0.1:5173';
 const browser = await chromium.launch({
   executablePath:
@@ -15,7 +15,7 @@ page.on('pageerror', (e) => errors.push(e.message));
 mkdirSync(screenshots, { recursive: true });
 try {
   await page.goto(base + '/');
-  await page.getByRole('link', { name: '体验麦麦 Demo', exact: true }).waitFor();
+  await page.getByRole('button', { name: '一键体验：AI 会编造钠含量吗？' }).waitFor();
   await page.locator('.stat strong').first().filter({ hasText: /^06/ }).waitFor();
   await page.screenshot({ path: `${screenshots}/dashboard.png`, fullPage: true });
   await page.locator('.scenario-card[href="/arena?scenario=scenario-004"]').click();
@@ -28,12 +28,11 @@ try {
   await page.getByRole('button', { name: '开始对比', exact: true }).click();
   await page.getByText('包含了日期不符或已取消的活动', { exact: true }).waitFor({ timeout: 15000 });
   await page.goto(base + '/');
-  await page.getByRole('link', { name: '体验麦麦 Demo', exact: true }).click();
-  await page.getByRole('button', { name: '开始对比', exact: true }).waitFor();
-  await page.getByRole('button', { name: '开始对比', exact: true }).click();
+  await page.getByRole('button', { name: '一键体验：AI 会编造钠含量吗？' }).click();
   await page.getByRole('link', { name: '查看完整工具轨迹' }).waitFor({ timeout: 15000 });
   await page.getByRole('heading', { name: '这次对比发现了什么？' }).waitFor();
-  await page.getByText('餐品热量筛选或数值与工具数据不一致', { exact: true }).waitFor();
+  await page.getByText('缺少数据时没有明确说明，或编造了数值', { exact: true }).waitFor();
+  await page.getByText('钠字段缺失时不得编造数值，必须结构化说明缺失。', { exact: true }).waitFor();
   await page.screenshot({ path: `${screenshots}/arena.png`, fullPage: true });
   const id = page.url().split('/').at(-1);
   await page.getByRole('link', { name: '查看完整工具轨迹' }).click();
@@ -56,7 +55,7 @@ try {
   await page.screenshot({ path: `${screenshots}/mobile-arena.png`, fullPage: true });
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
   await page.goto(base + '/');
-  await page.getByRole('link', { name: '体验麦麦 Demo', exact: true }).waitFor();
+  await page.getByRole('button', { name: '一键体验：AI 会编造钠含量吗？' }).waitFor();
   await page.screenshot({ path: `${screenshots}/mobile-dashboard.png`, fullPage: true });
   const homeOverflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
   console.log(
@@ -66,6 +65,7 @@ try {
       mobileOverflow: overflow || homeOverflow,
       checks: [
         'Demo UI battle',
+        'one-click featured case',
         'business scenario shortcut',
         'Chinese failure explanations',
         'real-time trace',

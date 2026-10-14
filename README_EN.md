@@ -24,7 +24,7 @@ pnpm dev
 
 Open http://127.0.0.1:5173. The API defaults to port 3001. Demo requires no keys. `pnpm build && pnpm start` serves the production build at http://127.0.0.1:3001.
 
-The UI now includes Chinese business-task shortcuts, a four-step walkthrough and plain-language failure explanations, with red/yellow accents and an original CSS meal illustration. Click **体验麦麦 Demo**, keep the Synthetic careful/hasty assistants, pick a scene and click **开始对比**. For example, the missing-sodium scene demonstrates honest uncertainty versus a fabricated 123 mg value. No Demo score represents real model performance.
+The UI includes Chinese business-task shortcuts, a four-step walkthrough and plain-language failure explanations, with red/yellow accents and an original CSS meal illustration. Click **一键体验：AI 会编造钠含量吗？** on the homepage to start the missing-sodium Demo immediately. It contrasts honest uncertainty with a fabricated 123 mg value and shows the failed assertions and their rationale. You can also choose another scenario in the Arena. No Demo score represents real model performance.
 
 ## Modes and features
 

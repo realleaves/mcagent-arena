@@ -14,7 +14,7 @@
 
 这个版本面向开发验收；普通用户只想查餐品或活动，不需要先进行模型对比。它也不是点餐、支付或医疗营养建议工具。Demo 的谨慎与急躁助手是预设行为，用于演示正确与错误答案，不能作为真实模型性能排行。
 
-第一次使用：打开首页 → **体验麦麦 Demo** → 保持 **Demo / Synthetic** 和默认两个助手 → 选择 **查不到钠含量怎么办** → **开始对比**。工具故意没有钠字段：谨慎助手说无法确认，急躁助手编出 123 mg。看两侧答案及“这次对比发现了什么？”，再展开最终断言或查看完整工具轨迹。
+第一次使用：打开首页 → 点击 **一键体验：AI 会编造钠含量吗？**。页面直接运行免密钥 Demo：工具故意没有钠字段，谨慎助手说无法确认，急躁助手编出 123 mg。看两侧答案、“这次对比发现了什么？”和失败断言依据，再查看完整工具轨迹。Demo 使用固定合成数据与预设行为，不代表真实模型成绩。
 
 完整步骤和六个业务例子见 [使用说明](docs/demo.md)。首页也提供任务快捷卡片与四步指南。界面采用红黄点缀和原创餐品插画，没有使用官方 Logo。
 
@@ -86,7 +86,7 @@ GPT-6.1 Sol 工具调用需要 Responses API；仅配置 Chat Completions 中转
 
 ## Demo 操作
 
-打开 Dashboard → Start Battle，选择 Demo / Synthetic、Careful vs Hasty 和测试场景。点击 Start Battle，观察双侧工具时间轴和最终评分。进入 Trace Explorer 展开参数/返回，再下载报告。刷新和 Results 页面仍可查看已有记录。
+打开 Dashboard，点击首页的钠含量案例可一键运行 Demo；也可选“自己选任务”进入 Arena，挑选其他场景。观察双侧工具时间轴、失败断言的具体依据与最终评分。进入 Trace Explorer 展开参数/返回，再下载报告。刷新和 Results 页面仍可查看已有记录。
 
 ![Dashboard](docs/screenshots/dashboard.png)
 ![Trace Explorer](docs/screenshots/traces.png)

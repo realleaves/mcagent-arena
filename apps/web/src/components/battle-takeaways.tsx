@@ -23,7 +23,12 @@ export function BattleTakeaways({ battle }: { battle: Battle }) {
                 {run.judge.failedAssertions.map((name) => (
                   <li key={name}>
                     <AlertTriangle size={14} />
-                    <span>{assertionDescriptions[name] || name}</span>
+                    <span>
+                      <b>{assertionDescriptions[name] || name}</b>
+                      {run.judge.evidence.find((e) => e.id === name)?.details && (
+                        <small>{run.judge.evidence.find((e) => e.id === name)?.details}</small>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>

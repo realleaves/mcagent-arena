@@ -133,12 +133,23 @@ export function Arena({ config }: { config?: Config }) {
           {starting ? '正在启动…' : running ? '正在执行…' : '开始对比'}
         </button>
       </section>
-      {mode !== 'demo' &&
-        config?.unavailableModels.map((m) => (
-          <ErrorBox key={m.id}>
-            {m.label}：{m.error}。请在本机 .env 修正后重启服务。
-          </ErrorBox>
-        ))}
+      {mode !== 'demo' && agentA && agentA === agentB && (
+        <div className="note">
+          两侧选用了同一个模型配置：这是两次独立运行，不能解读为两个不同模型的能力比较。
+        </div>
+      )}
+      {mode !== 'demo' && config?.unavailableModels.length ? (
+        <details className="model-availability panel">
+          <summary>{config.unavailableModels.length} 个模型配置暂不可用，查看原因</summary>
+          <ul>
+            {config.unavailableModels.map((m) => (
+              <li key={m.id}>
+                {m.label}：{m.error}。请在本机 .env 修正后重启服务。
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
       {(error || traceError) && <ErrorBox>{error || traceError}</ErrorBox>}
       <div className="panel scenario-brief">
         <div>
