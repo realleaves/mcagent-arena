@@ -1,5 +1,12 @@
 import type { ReactNode } from 'react';
-import { AlertTriangle, ArrowUpRight, CheckCircle2, LoaderCircle, XCircle } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowUpRight,
+  CheckCircle2,
+  Info,
+  LoaderCircle,
+  XCircle,
+} from 'lucide-react';
 import type { Mode } from '../lib/api';
 export function ModeBadge({ mode }: { mode: Mode }) {
   return (
@@ -37,17 +44,17 @@ export function Status({ status }: { status: string }) {
       'partial',
     ].includes(status);
   return (
-    <span className={`status ${success ? 'good' : uncertain ? 'warn' : fail ? 'bad' : 'muted'}`}>
+    <span className={`status ${success ? 'good' : uncertain ? 'neutral' : fail ? 'bad' : 'muted'}`}>
       {success ? (
         <CheckCircle2 size={14} />
       ) : uncertain ? (
-        <AlertTriangle size={14} />
+        <Info size={14} />
       ) : fail ? (
         <XCircle size={14} />
       ) : (
         <LoaderCircle size={14} className="spin" />
       )}
-      {uncertain ? '数据无法核验' : status}
+      {uncertain ? '已完成 · 无法评分' : status}
     </span>
   );
 }

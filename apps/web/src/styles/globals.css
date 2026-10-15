@@ -549,8 +549,31 @@ footer {
 .status.bad {
   color: #f48585;
 }
-.status.warn {
-  color: #f59e0b;
+.status.neutral {
+  color: #76b8ec;
+}
+.live-caveat {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  color: #9fc5e7;
+  background: #102035;
+  border: 1px solid #30506d;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.live-caveat svg {
+  flex: none;
+  margin-top: 2px;
+}
+.live-caveat strong {
+  color: #d8ebff;
+}
+.live-caveat p {
+  margin-top: 4px;
 }
 .note {
   display: flex;

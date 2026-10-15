@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams, Link } from 'react-router-dom';
-import { Swords, ArrowUpRight, Download, Terminal, Clock3, CheckCircle2 } from 'lucide-react';
+import { Swords, ArrowUpRight, Download, Terminal, Clock3, CheckCircle2, Info } from 'lucide-react';
 import { api, type Scenario, type Config, type Mode, type Battle, pretty } from '../lib/api';
 import { useBattle } from '../hooks/use-battle';
 import { PageHeader, ModeBadge, ErrorBox, Status, Empty } from '../components/ui';
@@ -130,9 +130,27 @@ export function Arena({ config }: { config?: Config }) {
           onClick={() => void start()}
         >
           <Swords size={17} />
-          {starting ? '正在启动…' : running ? '正在执行…' : '开始对比'}
+          {starting
+            ? '正在启动…'
+            : running
+              ? '正在执行…'
+              : mode === 'live'
+                ? '开始 Live 调用'
+                : '开始对比'}
         </button>
       </section>
+      {mode === 'live' && (
+        <div className="live-caveat" role="note">
+          <Info size={18} />
+          <div>
+            <strong>Live 用于验证真实模型和官方只读工具调用，可能产生模型费用。</strong>
+            <p>
+              当前官方营养和活动返回可能缺少完整列表、每份单位或目标日期证据；即使调用成功，也可能显示“已完成
+              · 无法评分”。要看可比较的能力分数，请选 Fixture Replay。
+            </p>
+          </div>
+        </div>
+      )}
       {mode !== 'demo' && agentA && agentA === agentB && (
         <div className="note">
           两侧选用了同一个模型配置：这是两次独立运行，不能解读为两个不同模型的能力比较。
