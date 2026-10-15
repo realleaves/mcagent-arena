@@ -66,10 +66,10 @@ export function configuredModels(env = process.env): ModelConfig[] {
         apiKey,
         protocol,
         temperature: protocol === 'responses' ? null : Number(env[prefix + 'TEMPERATURE'] || 0),
-        maxOutputTokens: Number(env[prefix + 'MAX_OUTPUT_TOKENS'] || 2000),
+        maxOutputTokens: Number(env[prefix + 'MAX_OUTPUT_TOKENS'] || 4000),
         reasoningEffort:
           protocol === 'responses' ? env[prefix + 'REASONING_EFFORT'] || 'low' : 'not_requested',
-        promptVersion: 'arena-system-v1',
+        promptVersion: 'arena-system-v2',
       },
     ];
   });
@@ -83,6 +83,7 @@ const chatResponse = z.object({
   choices: z
     .array(
       z.object({
+        finish_reason: z.string().nullable().optional(),
         message: z.object({
           content: z.string().nullable().optional(),
           tool_calls: z.array(call).optional(),
@@ -192,6 +193,8 @@ export class OpenAICompatibleAdapter implements AgentAdapter {
           '模型未返回兼容 tools/tool_calls 的 Chat Completions 数据',
         );
       const m = parsed.data.choices[0]!.message;
+      if (parsed.data.choices[0]!.finish_reason === 'length')
+        throw new ArenaError('OUTPUT_LIMIT', '模型输出被 Token 上限截断', 'model');
       return {
         content: m.content ?? null,
         calls: (m.tool_calls || []).map((c) => ({

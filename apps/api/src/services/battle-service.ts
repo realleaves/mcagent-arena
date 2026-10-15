@@ -85,7 +85,7 @@ export class BattleService {
     const fixtureHash = createHash('sha256')
       .update(readFileSync(`fixtures/synthetic/${s.fixtureId}.json`))
       .digest('hex');
-    const evaluationKey = `${s.id}@${s.version}:${fixtureHash}:judge-${EVALUATOR_VERSION}:prompt-arena-system-v1:${JSON.stringify(s.limits)}`;
+    const evaluationKey = `${s.id}@${s.version}:${fixtureHash}:judge-${EVALUATOR_VERSION}:prompt-${a.promptVersion}:${JSON.stringify(s.limits)}`;
     const battle: Battle = {
       id: randomUUID(),
       scenarioId: s.id,

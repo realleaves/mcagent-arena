@@ -1,6 +1,6 @@
 # McAgent Arena V1.0 交付清单
 
-当前可运行的 Demo 产品已实现并验收，真实麦当劳 MCP 已连接并调用成功。本机记录显示同一个真实模型在固定合成 Fixture 下完成过两次独立 Replay；真实双模型 Replay 与模型联动的 Live MCP 仍待验证。官方报名 Issue 已回复成功参赛；不宣称获奖或最终资格审核完成。
+当前可运行的 Demo 产品已实现并验收，真实麦当劳 MCP 已连接并调用成功。2026-10-15，充值后的 `deepseek-flash` 原生工具探测成功，同一个真实模型在固定合成 Fixture 下完成两次独立 Replay（90/100 分）；不同模型的对战与模型联动的 Live MCP 仍待验证。官方报名 Issue 已回复成功参赛；不宣称获奖或最终资格审核完成。
 
 ## 实际源文件目录树
 
@@ -175,7 +175,7 @@ Live：先运行 `pnpm arena:verify-mcp --call`，再在界面选择Live启用�
 
 ## 证据和已知限制
 
-三个官方只读工具真实调用均成功。脱敏证据在本机 data/mcp-verification.json、data/mcp-nutrition-verification.json、data/mcp-campaign-verification.json；该目录不公开入库。真实双模型对战尚未验证成功，不能将Demo或直接MCP探测当成真实LLM Benchmark成功。
+三个官方只读工具真实调用均成功。脱敏证据在本机 data/mcp-verification.json、data/mcp-nutrition-verification.json、data/mcp-campaign-verification.json；该目录不公开入库。场景001的同模型真实 LLM Replay 已完成（90/100 分），但不同模型对战尚未验证成功；不能将 Demo 或直接 MCP 探测当成真实 LLM Live Benchmark 成功。
 
 评分仅程序化验证结构化字段与证据，不完整验证任意自然语言。Live当前营养返回缺明确每份基准，严格评分器不强算正确。Node22内置SQLite有experimental提示。没有多用户认证、公网部署、真实下单/支付/兑换或WorkBuddy记录。项目 GitHub 入口已设置为 https://github.com/realleaves/mcagent-arena；发布与报名状态见 docs/contest-submission.md，公网部署未执行。
 

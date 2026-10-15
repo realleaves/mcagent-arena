@@ -142,6 +142,26 @@ test('HTTP 402 is reported as a billing infrastructure error without retrying', 
     judge(s, run.finalAnswer, run.records, run.totalDurationMs, 'replay', run.status).totalScore,
   ).toBeNull();
 });
+test('truncated Chat Completions output is a model limit failure, not a format repair', async () => {
+  let attempts = 0;
+  const s = loadScenario('scenario-001');
+  const adapter = new OpenAICompatibleAdapter(
+    { ...demoModels[0]!, baseUrl: 'http://localhost/v1' },
+    async () => {
+      attempts++;
+      return new Response(
+        JSON.stringify({
+          choices: [{ finish_reason: 'length', message: { content: '{"answer":' } }],
+          usage: { total_tokens: 100 },
+        }),
+      );
+    },
+  );
+  const run = await runAgent(adapter, new FixtureProvider(s.fixtureId), s, 'replay');
+  expect(attempts).toBe(1);
+  expect(run.status).toBe('model_failed');
+  expect(run.errorCode).toBe('OUTPUT_LIMIT');
+});
 test('Responses continuation submits tool result with call_id and no hidden trace', async () => {
   const bodies: Record<string, unknown>[] = [];
   const adapter = new OpenAICompatibleAdapter(
