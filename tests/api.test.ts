@@ -65,6 +65,8 @@ test('no-key Demo executes two independent Agents and persists report', async ()
   await getService(a).wait(id);
   const b = (await a.inject(`/api/battles/${id}`)).json();
   expect(b.runs).toHaveLength(2);
+  expect(b.scenarioSnapshot.task).toContain('500');
+  expect(b.scenarioSnapshot.version).toBe(b.scenarioVersion);
   expect(b.evaluationKey).toContain(`prompt-${b.runs[0].modelParameters.systemPromptVersion}:`);
   expect(b.runs[0].judge.passed).toBe(true);
   expect(b.runs[1].judge.passed).toBe(false);

@@ -12,7 +12,10 @@ import {
   modelAvailability,
   publicModel,
 } from '../../../../packages/runner/src/provider-adapter.js';
-import { EVALUATOR_VERSION } from '../../../../packages/benchmark/src/judge.js';
+import {
+  EVALUATOR_VERSION,
+  LIVE_EVALUATOR_VERSION,
+} from '../../../../packages/benchmark/src/judge.js';
 import { runBattle } from '../../../../packages/runner/src/battle-runner.js';
 import type { BattleRequest } from '../../../../packages/shared/src/schemas.js';
 import { ArenaError } from '../../../../packages/shared/src/errors.js';
@@ -65,7 +68,7 @@ export class BattleService {
     if (this.jobs.size >= 2) throw new ArenaError('BUSY', '最多同时运行两场对战');
     let s;
     try {
-      s = loadScenario(req.scenarioId);
+      s = loadScenario(req.scenarioId, req.mode);
     } catch {
       throw new ArenaError('SCENARIO_NOT_FOUND', '测试场景不存在');
     }
@@ -82,10 +85,13 @@ export class BattleService {
     if (req.mode === 'live' && !this.env.MCD_MCP_TOKEN)
       throw new ArenaError('MISSING_TOKEN', 'Live 需要 MCP Token');
     if (this.jobs.size >= 2) throw new ArenaError('BUSY', '最多同时运行两场对战');
-    const fixtureHash = createHash('sha256')
-      .update(readFileSync(`fixtures/synthetic/${s.fixtureId}.json`))
-      .digest('hex');
-    const evaluationKey = `${s.id}@${s.version}:${fixtureHash}:judge-${EVALUATOR_VERSION}:prompt-${a.promptVersion}:${JSON.stringify(s.limits)}`;
+    const fixtureHash =
+      req.mode === 'live'
+        ? 'live-per-call'
+        : createHash('sha256')
+            .update(readFileSync(`fixtures/synthetic/${s.fixtureId}.json`))
+            .digest('hex');
+    const evaluationKey = `${s.id}@${s.version}:${fixtureHash}:judge-${req.mode === 'live' && s.evaluationKind ? LIVE_EVALUATOR_VERSION : EVALUATOR_VERSION}:prompt-${a.promptVersion}:${JSON.stringify(s.limits)}`;
     const battle: Battle = {
       id: randomUUID(),
       scenarioId: s.id,
@@ -98,6 +104,7 @@ export class BattleService {
       agentB: b.id,
       runs: [],
       evaluationKey,
+      scenarioSnapshot: s,
     };
     this.store.save(battle);
     const job = new Promise<void>((resolve) =>

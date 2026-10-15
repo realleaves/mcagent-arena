@@ -6,6 +6,18 @@ export const limitsSchema = z.object({
   timeoutMs: z.number().int().min(1).max(60000),
   maxTokens: z.number().int().min(1).max(50000),
 });
+const evaluationKindSchema = z.enum(['live_nutrition_fields', 'live_calendar_entries']);
+const liveVariantSchema = z.object({
+  version: z.string(),
+  title: z.string(),
+  description: z.string(),
+  task: z.string(),
+  expectedBehavior: z.string(),
+  assertions: z.array(z.string()),
+  evaluationKind: evaluationKindSchema,
+  maxSelectedItems: z.number().int().min(1).max(5),
+  outputInstructions: z.string(),
+});
 export const scenarioSchema = z.object({
   id: z.string(),
   version: z.string(),
@@ -21,6 +33,10 @@ export const scenarioSchema = z.object({
   targetDate: z.string().optional(),
   targetIds: z.array(z.string()).optional(),
   calorieLimit: z.number().optional(),
+  evaluationKind: evaluationKindSchema.optional(),
+  maxSelectedItems: z.number().int().min(1).max(5).optional(),
+  outputInstructions: z.string().optional(),
+  liveVariant: liveVariantSchema.optional(),
 });
 export const itemSchema = z
   .object({

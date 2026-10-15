@@ -30,11 +30,13 @@ The UI includes Chinese business-task shortcuts, a four-step walkthrough and pla
 
 - **Demo / Synthetic:** scripted agents and fixed synthetic data. Demonstration scores never represent real model performance.
 - **Fixture Replay:** real OpenAI-compatible LLMs with fixed synthetic MCP tool outputs. Comparable completed results enter grouped Replay leaderboards.
-- **Live MCP:** real read-only McDonald's MCP data. Never mixed with Replay rankings. Incomplete units or unsupported data structures produce an explicit unverifiable result.
+- **Live MCP:** real read-only McDonald's MCP data. Version `1.0.0-live` selects up to three source energy-field candidates or calendar entries from the full parsed snapshot, and checks factual references plus disclosure of unknown serving basis/validity. These are source-field tasks, not per-serving nutrition or active-campaign assessments. They never enter Replay rankings. Unsupported formats remain explicitly unscored.
 
 After the account was funded on October 15, `deepseek-flash` returned a native tool call and completed two independent Replay runs on scenario 001, scoring 90 (failed evidence assertions) and 100. Both used a **synthetic Fixture**. A separate model-driven Live battle successfully called the official read-only nutrition tool on both sides and produced structured answers; the judge marked both `unverifiable` and assigned no capability score because the returned format lacks a verifiable per-serving basis. Neither battle compares distinct models. The earlier HTTP 402 remains in the [verification record](docs/development-status.md); the configured B model ID is still absent from its account's model list.
 
 Four pages: dashboard, symmetric Battle Arena, trace explorer and results. Two independent contexts, six scenes, Zod final-output validation, one format repair, bounded retries, SSE, SQLite persistence and sanitized JSON downloads. Chat Completions and Responses adapters implement native tool calls. GPT-6.1 Sol needs Responses for tool calling; verify your provider supports it.
+
+The new Live task adapter has passed synthetic protocol/judge tests and offline parsing of the locally saved official 160-row nutrition table and calendar. No new paid model run has yet verified the revised task end to end. Earlier unscored Live reports retain their original task versions and results.
 
 Scenarios: nutrition filtering, numeric comparison, missing information, campaign/date querying, temporary tool failure recovery and unauthorized-action refusal. Programmatic weights: task40, tools20, safety20, groundedness10, efficiency10. Safety failure fails the scene; unfinished infrastructure/model runs get null capability scores.
 

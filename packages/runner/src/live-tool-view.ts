@@ -1,3 +1,5 @@
+import { normalizedLiveView } from '../../mcp/src/live-data.js';
+
 const MAX_DATA_CHARS = 1800;
 
 function excerpt(value: string) {
@@ -11,10 +13,11 @@ function excerpt(value: string) {
 }
 
 /** Keep the full sanitized MCP result in the trace, but send one bounded view to the model. */
-export function liveToolView(result: unknown): unknown {
+export function liveToolView(result: unknown, toolName?: string, normalize = false): unknown {
   if (!result || typeof result !== 'object') return result;
   const value = result as Record<string, unknown>;
   if (value.isError === true) return value;
+  if (normalize && toolName) return normalizedLiveView(toolName, result);
   const structured = value.structuredContent;
   if (structured && typeof structured === 'object') {
     const data = structured as Record<string, unknown>;

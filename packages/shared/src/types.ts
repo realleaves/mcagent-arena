@@ -19,6 +19,8 @@ export interface ToolRecord {
   error?: string;
   code?: string;
   timestamp: string;
+  source?: 'synthetic' | 'live';
+  sourceSnapshotHash?: string;
 }
 export interface ObservableEvent {
   type: string;

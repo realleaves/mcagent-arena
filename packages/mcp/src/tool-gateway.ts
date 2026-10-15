@@ -1,4 +1,5 @@
 import Ajv from 'ajv';
+import { createHash } from 'node:crypto';
 import addFormats from 'ajv-formats';
 import type {
   Emit,
@@ -43,6 +44,7 @@ export class ToolGateway {
         status: 'failed',
         durationMs: 0,
         timestamp: new Date().toISOString(),
+        source: this.provider.source,
       };
       this.emit({
         type: 'tool_called',
@@ -88,6 +90,10 @@ export class ToolGateway {
           throw new ArenaError('TOOL_ERROR', 'MCP 工具返回 isError，无法确认数据');
         record.status = 'success';
         record.output = redact(result);
+        if (this.provider.source === 'live')
+          record.sourceSnapshotHash = createHash('sha256')
+            .update(JSON.stringify(record.output))
+            .digest('hex');
         record.durationMs = Date.now() - start;
         this.records.push(record);
         this.emit({ type: 'tool_result', ...record });

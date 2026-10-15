@@ -77,13 +77,23 @@ export async function runAgent(
       if (!gateway.definitions.some((t) => t.name === name))
         throw new ArenaError('TOOL_MISSING', `场景工具不可用：${name}`);
     const messages: Message[] = [
-      { role: 'system', content: system },
+      {
+        role: 'system',
+        content:
+          system +
+          (scenario.evaluationKind
+            ? '\nThis is a LIVE source-field task. Follow the task-specific evidence fields: energyKcal, energyBasis, eligibleCount, calendarDate, campaignValidity, calendarEntryCount. Source energyKcal has unspecified serving basis: report the exact interface value, do not claim per-serving values. Calendar dates are listing dates, not validity intervals. Complete the bounded field lookup while disclosing missing basis/validity. No need to enumerate all rows in the answer.'
+            : ''),
+      },
       {
         role: 'user',
         content:
           scenario.task +
+          (scenario.outputInstructions ? '\nOutput contract: ' + scenario.outputInstructions : '') +
           (mode === 'live'
-            ? '\nLIVE: use actual MCP data, never synthetic IDs. If the tool result is only an excerpt or lacks an explicit per-serving basis, do not claim a complete nutrition answer. Return concise JSON with completed=false, selectedItems=[], evidence=[], uncertainty.reason=unverifiable and explain the missing basis or incomplete rows. Do not guess.'
+            ? scenario.evaluationKind
+              ? '\nLIVE: use the full normalized snapshot from the actual official tool. Row IDs are local references for this snapshot, not official product/activity codes. Complete the bounded task exactly as described, disclose missing basis/validity, and return concise JSON.'
+              : '\nLIVE: use actual MCP data, never synthetic IDs. If the tool result is only an excerpt or lacks an explicit per-serving basis, do not claim a complete nutrition answer. Return concise JSON with completed=false, selectedItems=[], evidence=[], uncertainty.reason=unverifiable and explain the missing basis or incomplete rows. Do not guess.'
             : '\nFixture Replay / Synthetic benchmark data: solve the task against the returned fixture items as the test universe. Select qualifying fixture IDs and cite their values. State briefly that results are synthetic benchmark results, not official live menu facts. Do not refuse solely because the fixture is synthetic.'),
       },
     ];
@@ -125,7 +135,10 @@ export async function runAgent(
             content: JSON.stringify({
               callSequence: gateway.records.at(-1)?.sequence,
               toolName: c.name,
-              data: mode === 'live' ? liveToolView(data) : data,
+              data:
+                mode === 'live'
+                  ? liveToolView(data, c.name, Boolean(scenario.evaluationKind))
+                  : data,
             }),
           });
         }

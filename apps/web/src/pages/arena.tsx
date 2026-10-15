@@ -8,6 +8,7 @@ import { TraceTimeline } from '../components/trace';
 import { ScoreComparison } from '../components/score';
 import { BattleTakeaways } from '../components/battle-takeaways';
 import { scenarioGuides } from '../lib/scenario-guide';
+import { scenarioForMode } from '../../../../packages/shared/src/scenario-mode';
 export function Arena({ config }: { config?: Config }) {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -61,7 +62,8 @@ export function Arena({ config }: { config?: Config }) {
       setStarting(false);
     }
   }
-  const current = scenarios.find((s) => s.id === scenarioId);
+  const baseScenario = scenarios.find((s) => s.id === scenarioId);
+  const current = baseScenario ? scenarioForMode(baseScenario, mode) : undefined;
   const guide = scenarioGuides[scenarioId];
   const running = battle?.status === 'running';
   return (
@@ -105,7 +107,10 @@ export function Arena({ config }: { config?: Config }) {
               .filter((s) => s.mode.includes(mode))
               .map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.id.slice(-3)} · {scenarioGuides[s.id]?.title || s.title}
+                  {s.id.slice(-3)} ·{' '}
+                  {mode === 'live'
+                    ? scenarioForMode(s, mode).title
+                    : scenarioGuides[s.id]?.title || s.title}
                 </option>
               ))}
           </select>
@@ -143,10 +148,10 @@ export function Arena({ config }: { config?: Config }) {
         <div className="live-caveat" role="note">
           <Info size={18} />
           <div>
-            <strong>Live 用于验证真实模型和官方只读工具调用，可能产生模型费用。</strong>
+            <strong>Live 将运行真实模型和官方只读工具，可能产生模型费用。</strong>
             <p>
-              当前官方营养和活动返回可能缺少完整列表、每份单位或目标日期证据；即使调用成功，也可能显示“已完成
-              · 无法评分”。要看可比较的能力分数，请选 Fixture Replay。
+              营养场景核对接口能量字段的候选样本，活动场景核对日历收录条目；不推断每份计量、活动有效期或在售状态。评分依据本次完整官方快照，属于实时观察结果，不进入
+              Replay 标准排行榜。
             </p>
           </div>
         </div>
@@ -172,8 +177,10 @@ export function Arena({ config }: { config?: Config }) {
       <div className="panel scenario-brief">
         <div>
           <p className="eyebrow">为什么要测这道题？</p>
-          <h2>{guide?.title || current?.title}</h2>
-          <p>{guide?.purpose || current?.description}</p>
+          <h2>{current?.evaluationKind ? current.title : guide?.title || current?.title}</h2>
+          <p>
+            {current?.evaluationKind ? current.description : guide?.purpose || current?.description}
+          </p>
         </div>
         <details open={!battle}>
           <summary>{mode === 'demo' ? 'Demo 操作与观察提示' : '操作提示'}</summary>
@@ -190,14 +197,24 @@ export function Arena({ config }: { config?: Config }) {
           )}
         </details>
       </div>
+      {battle && current && battle.scenarioVersion !== current.version && (
+        <div className="note">
+          正在查看历史报告 v{battle.scenarioVersion}；再次启动将运行下方的新任务 v{current.version}
+          ，历史结果保留原版本。
+        </div>
+      )}
       <div className="task-strip">
-        <span className="eyebrow">本次交给助手的任务</span>
+        <span className="eyebrow">
+          {battle && battle.scenarioVersion !== current?.version
+            ? '再次启动时交给助手的任务'
+            : '本次交给助手的任务'}
+        </span>
         <p>{current?.task}</p>
         <div className="task-limits">
           <span>v{current?.version}</span>
-          <span>最多 6 轮</span>
-          <span>最多 6 次工具调用</span>
-          <span>限时 60 秒</span>
+          <span>最多 {current?.limits.maxSteps ?? 6} 轮</span>
+          <span>最多 {current?.limits.maxCalls ?? 6} 次工具调用</span>
+          <span>限时 {(current?.limits.timeoutMs ?? 60000) / 1000} 秒</span>
           <span>真实工具只读</span>
         </div>
       </div>

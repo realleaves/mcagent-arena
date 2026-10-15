@@ -119,7 +119,9 @@ pnpm arena:verify-mcp --call --tool list-nutrition-foods
 
 2026-10-13 已真实成功连接、获取三个只读工具 schema，成功调用 `now-time-info`、`list-nutrition-foods` 和 `campaign-calendar`。本机证据生成在 `data/mcp-verification.json`；每次验证更新此文件。真实双模型 Benchmark 的成功状态以相应报告为准，不能从直接 MCP 探测成功推断模型对战成功。
 
-Live 仅开放 `list-nutrition-foods`、`campaign-calendar`、`now-time-info`。场景001/004支持 Live；恢复005和安全006只使用 Mock。实际营养数据的单位基准不完整时，报告保留真实证据并返回无法验证，不强行按每份评分。
+Live 仅开放 `list-nutrition-foods`、`campaign-calendar`、`now-time-info`。场景001/004使用独立的 `1.0.0-live` 任务版本：营养任务从完整官方快照选择最多3个 `energyKcal ≤ 500` 的候选，并披露计量基准未明确；活动任务列出最多3个实际日历条目及收录日期，并披露有效期/取消状态未经验证。它们按源字段评分，不冒充“每份热量”评估或“当前有效活动”判断。Replay 的固定任务保持原规则。
+
+官方 TOON/JSON 返回由程序完整解析后提供给模型，移除重复包装但不截取行；Judge 独立核对原始工具快照。报告记录任务版本、原始返回和每次 Live 快照的 SHA256。新 Live 适配已通过合成协议测试，并离线读取本机保存的官方160行营养表及活动日历验证解析；**新版任务尚未新增付费模型实跑验证**。格式变化或无法完整解析时仍明确不评分。Live 得分不进入 Replay 排名，恢复005和安全006只使用 Mock。
 
 详细接入、安全边界与调用证据见 [MCP_INTEGRATION.md](MCP_INTEGRATION.md)。
 

@@ -23,6 +23,8 @@ curl -fsS http://127.0.0.1:3001/api/battles \
 
 Provider choices are server-owned IDs (`provider-a`, `provider-b`). Demo choices are `demo-careful`, `demo-hasty`. The API strictly rejects extra fields, including user-supplied API Base URLs/MCP URLs. Replay requires configured models found in the provider's model listing. Live also requires the MCP Token. Recovery and safety reject Live regardless of credentials.
 
+Scenarios 001/004 include a `liveVariant` with its own task/version/evaluation scope. A Live POST resolves that variant on the server; new saved Battles include the exact resolved `scenarioSnapshot`. Live reports use evaluator `live-1.0.0`, `fixtureHash=live-per-call`, and a `sourceSnapshotHash` on each real tool record. Scores evaluate bounded source-field lookup and uncertainty disclosure, not per-serving nutrition or campaign validity. The fixed Replay tasks and their evaluator remain separate. Historical reports are not re-evaluated when a scenario definition changes.
+
 SSE types: battle_started, agent_started, model_requested, tool_called, tool_result, format_repair, agent_completed, judge_completed, battle_completed, battle_failed, battle_saved. Events have persistent numeric ID, battle sequence, Agent slot when relevant, timestamp and sanitized input/output. A per-Agent tool-attempt sequence is emitted as `step` on tool_called and in the tool record; the SSE envelope sequence numbers the whole battle.
 
 `battle_completed` is an execution event; `battle_saved` confirms the final SQLite result snapshot is ready. Reconnect or fetch the saved battle to recover state. Report eligibility is explicit in `standardLeaderboardEligible`; null scores are not capability rankings.

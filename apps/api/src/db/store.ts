@@ -3,7 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import type { BattleAgentRun } from '../../../../packages/runner/src/battle-runner.js';
-import type { Mode } from '../../../../packages/shared/src/schemas.js';
+import type { Mode, Scenario } from '../../../../packages/shared/src/schemas.js';
 import type { ObservableEvent } from '../../../../packages/shared/src/types.js';
 import { redact } from '../../../../packages/shared/src/redact.js';
 export interface Battle {
@@ -19,6 +19,7 @@ export interface Battle {
   agentB: string;
   runs: BattleAgentRun[];
   evaluationKey: string;
+  scenarioSnapshot?: Scenario;
 }
 export interface StoredEvent extends ObservableEvent {
   id: number;

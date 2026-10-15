@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { scenarioSchema } from '../../shared/src/schemas.js';
+import { scenarioSchema, type Mode } from '../../shared/src/schemas.js';
+import { scenarioForMode } from '../../shared/src/scenario-mode.js';
 export function loadScenarios(root = resolve('benchmarks')) {
   return readdirSync(root, { withFileTypes: true })
     .filter((d) => d.isDirectory())
@@ -13,8 +14,8 @@ export function loadScenarios(root = resolve('benchmarks')) {
     )
     .sort((a, b) => a.id.localeCompare(b.id));
 }
-export function loadScenario(id: string) {
+export function loadScenario(id: string, mode?: Mode) {
   const s = loadScenarios().find((s) => s.id === id);
   if (!s) throw new Error(`Unknown scenario: ${id}`);
-  return s;
+  return mode ? scenarioForMode(s, mode) : s;
 }

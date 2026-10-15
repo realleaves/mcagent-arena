@@ -69,7 +69,7 @@ export function configuredModels(env = process.env): ModelConfig[] {
         maxOutputTokens: Number(env[prefix + 'MAX_OUTPUT_TOKENS'] || 4000),
         reasoningEffort:
           protocol === 'responses' ? env[prefix + 'REASONING_EFFORT'] || 'low' : 'not_requested',
-        promptVersion: 'arena-system-v2',
+        promptVersion: 'arena-system-v3',
       },
     ];
   });
