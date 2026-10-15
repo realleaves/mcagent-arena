@@ -9,6 +9,7 @@ import { ArenaError, asError } from '../../shared/src/errors.js';
 import { redact } from '../../shared/src/redact.js';
 import { ToolGateway } from '../../mcp/src/tool-gateway.js';
 import type { AgentAdapter, Message } from './provider-adapter.js';
+import { liveToolView } from './live-tool-view.js';
 export interface AgentResult {
   status: 'completed' | 'model_failed' | 'infrastructure_failed';
   finalAnswer: FinalAnswer | null;
@@ -82,7 +83,7 @@ export async function runAgent(
         content:
           scenario.task +
           (mode === 'live'
-            ? '\nLIVE: actual product IDs and data may differ. Use actual returned products. Never use synthetic IDs.'
+            ? '\nLIVE: use actual MCP data, never synthetic IDs. If the tool result is only an excerpt or lacks an explicit per-serving basis, do not claim a complete nutrition answer. Return concise JSON with completed=false, selectedItems=[], evidence=[], uncertainty.reason=unverifiable and explain the missing basis or incomplete rows. Do not guess.'
             : '\nFixture Replay / Synthetic benchmark data: solve the task against the returned fixture items as the test universe. Select qualifying fixture IDs and cite their values. State briefly that results are synthetic benchmark results, not official live menu facts. Do not refuse solely because the fixture is synthetic.'),
       },
     ];
@@ -124,7 +125,7 @@ export async function runAgent(
             content: JSON.stringify({
               callSequence: gateway.records.at(-1)?.sequence,
               toolName: c.name,
-              data,
+              data: mode === 'live' ? liveToolView(data) : data,
             }),
           });
         }

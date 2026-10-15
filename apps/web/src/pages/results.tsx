@@ -129,9 +129,11 @@ export function Results() {
                       <small>
                         {b.runs
                           .map((r) =>
-                            r.judge.passed
-                              ? 'PASS'
-                              : r.errorCode || r.judge.failedAssertions.join(', '),
+                            r.judge.status === 'unverifiable'
+                              ? '实时数据无法核验'
+                              : r.judge.passed
+                                ? 'PASS'
+                                : r.errorCode || r.judge.failedAssertions.join(', '),
                           )
                           .join(' / ')}
                       </small>

@@ -103,7 +103,7 @@ pnpm arena:run --scenario scenario-002 --mode replay \
   --agent-a provider-a --agent-b provider-b --out data/replay-report.json
 ```
 
-2026-10-15 充值后，`deepseek-flash` 的原生工具调用探测成功；同一模型在两个独立上下文完成了场景 001 的 Replay，分别获得 90 分（证据断言未通过）和 100 分。工具返回为固定合成 Fixture；这验证了当前真实模型 Replay 链路，但不是不同模型比较，也不是 Live MCP 联动。先前 2026-10-14 的 HTTP 402 记录仍保留在[开发验证记录](docs/development-status.md)。当前 B 的 `gpt-6.1-sol` 不在该账号模型列表中，真实双模型对战仍待验证。
+2026-10-15 充值后，`deepseek-flash` 的原生工具调用探测成功；同一模型在两个独立上下文完成了场景 001 的 Replay，分别获得 90 分（证据断言未通过）和 100 分，工具返回为固定合成 Fixture。同日还完成了模型驱动的 Live MCP 只读营养工具对战：两侧均成功取得官方工具结果并给出结构化回答，但官方返回缺少可核验的每份单位基准，Judge 标记 `unverifiable`，不生成能力分数。两场都不是不同模型比较。先前 2026-10-14 的 HTTP 402 记录仍保留在[开发验证记录](docs/development-status.md)。当前 B 的 `gpt-6.1-sol` 不在该账号模型列表中，真实双模型对战仍待验证。
 
 必须先启动 `pnpm dev`。只读历史和下载报告不重复触发调用。排行榜仅比较相同场景版本、Fixture SHA256、评分器、提示词、预算和模型参数条件。不同条件分组展示，不进行跨场景平均冒充全能排名。固定 temperature 降低随机性，不保证 LLM 绝对可复现。
 

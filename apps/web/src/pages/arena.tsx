@@ -212,7 +212,7 @@ export function Arena({ config }: { config?: Config }) {
                 </div>
                 <Status
                   status={
-                    run?.status ||
+                    (run?.judge.status === 'unverifiable' ? 'unverifiable' : run?.status) ||
                     String(completion?.status || (local.length ? 'running' : 'ready'))
                   }
                 />
@@ -228,7 +228,9 @@ export function Arena({ config }: { config?: Config }) {
                 </span>
                 <span>
                   <CheckCircle2 size={14} />
-                  {run?.judge.totalScore ?? '—'} / 100
+                  {run?.judge.status === 'unverifiable'
+                    ? '无法核验'
+                    : `${run?.judge.totalScore ?? '—'} / 100`}
                 </span>
               </div>
               <div className="agent-trace">

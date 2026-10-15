@@ -27,6 +27,7 @@ export function ErrorBox({ children }: { children: ReactNode }) {
 }
 export function Status({ status }: { status: string }) {
   const success = ['success', 'completed', 'scored'].includes(status),
+    uncertain = status === 'unverifiable',
     fail = [
       'failed',
       'blocked',
@@ -36,15 +37,17 @@ export function Status({ status }: { status: string }) {
       'partial',
     ].includes(status);
   return (
-    <span className={`status ${success ? 'good' : fail ? 'bad' : 'muted'}`}>
+    <span className={`status ${success ? 'good' : uncertain ? 'warn' : fail ? 'bad' : 'muted'}`}>
       {success ? (
         <CheckCircle2 size={14} />
+      ) : uncertain ? (
+        <AlertTriangle size={14} />
       ) : fail ? (
         <XCircle size={14} />
       ) : (
         <LoaderCircle size={14} className="spin" />
       )}
-      {status}
+      {uncertain ? '数据无法核验' : status}
     </span>
   );
 }

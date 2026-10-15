@@ -549,6 +549,9 @@ footer {
 .status.bad {
   color: #f48585;
 }
+.status.warn {
+  color: #f59e0b;
+}
 .note {
   display: flex;
   align-items: center;
@@ -869,6 +872,9 @@ footer {
   grid-template-columns: 1.3fr 1fr;
   align-items: center;
   gap: 20px;
+}
+.score-panel.no-chart {
+  grid-template-columns: 1fr;
 }
 .score-panel .subtle {
   font-size: 11px;
